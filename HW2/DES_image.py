@@ -90,9 +90,9 @@ right_half_32bits = BitVector( intVal = 800000700, size = 32 )
 # Now we need to expand the 32-bit block into 48 bits:
 right_half_with_expansion_permutation = right_half_32bits.permute( expansion_permutation ) 
 
-print "expanded right_half_32bits: ", right_half_with_expansion_permutation
+# print "expanded right_half_32bits: ", right_half_with_expansion_permutation
 
 # The following statement takes the 48 bits back down to 32 bits after carrying
 # out S-box based substitutions:
 output = substitute(right_half_with_expansion_permutation)
-print output
+# print output
