@@ -1,0 +1,48 @@
+What is an ideal block cipher?
+- Modern block cipher: replace block of N bits from plaintext -> block of N bits from the ciphertext
+- Ideal block cipher: relationship between input blocks and output blocks is random
+- It must be invertible for decryption to work, so it has to be 1-to-1
+- Each input block has to be mapped to an output block
+
+How to calculate the size of the codebook for a 4-bit ideal block cipher? N-bit?
+4-bit: 4 * 2^4 = 4 * 16 = 64 bits
+N-bit: N * 2^N bits
+
+What is a Feistel Structure?
+- Uses the same basic algo for both encryption and decryption
+- Consists of multiple rounds of processing plaintext
+	- First step: substitution
+	- Second step: permutation
+- Input block to each round: divided into 2 halves (this is plaintext)
+- Right half unchanged each round
+- Left half: goes through operation depends on R and encryption key (Feistel function)
+- Permutation step: swapping modified L and R (L for next round is R of the current round)
+
+Relationship between the bit blocks passing through the different encryption rounds?
+Output of each round during decryption is the input to the corresponding round during encryption
+
+Decryption rounds?
+Same 
+
+
+Different computational steps in each round of processing in DES?
+- Data Encryption Algo
+- Expansion step (from 64 bits: 32-bit right half expanded into 48-bit block)
+	1. Divide 32-bit block into 8-bit words
+	2. Attach additional bit on the left to each 4-bit word that is the last bit 	   of the previous 4-bit word
+	3. Attach additional bit to the right of each 4-bit word that is the 		   beginning bit of the next 4-bit word.
+- 56-bit key is divided into two halves
+- 48 bits of the expanded output from E-step XORed with round key (key mixing)
+- Output produced from prev step -> broken into 8 6-bit words
+- Each 6-bit word replaced with 4-bit word (S-box)
+- End up with 32-bit word, goes through permutation (P-box)
+- Output from P-box XORed with left half of 64-bit block we started with
+- Output of this XORing op gives right half block for the next round
+- What S-box does: diffusion (change in plaintext bit must propagate out to many cipertext bits as possible)
+
+
+Why do we expand the right 32-bit half-block at the input to each round into 48 bits? 
+Introudce diffusion in the generation of the output from the input
+
+What logic is used in this expansion?
+XOR
