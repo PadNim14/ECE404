@@ -116,7 +116,7 @@ def decrypt(inputTextFile, round_keyList):
     FILEOUT = open(sys.argv[4], 'w')
     for i in range(len(bv) // 64):
         bitvec = bv[i * 64 : (i + 1) * 64]
-        print(bitvec.get_hex_string_from_bitvector())
+        # print(bitvec.get_hex_string_from_bitvector())
         if len(bitvec) > 0:
             if(len(bitvec)) != 64:
                bitvec.pad_from_right(64 - len(bitvec)) 
