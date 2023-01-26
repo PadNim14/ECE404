@@ -2,7 +2,7 @@
 # Homework Number: 2
 # Name: Nimal Padmanabhan
 # ECN Login: npadmana   
-# Due Date: 1/19/23
+# Due Date: 1/26/23
 
 import sys
 from BitVector import BitVector
@@ -105,12 +105,14 @@ def get_encryption_key(filename):
     key = ""
     with open(filename) as f:
         key = f.readline()
+    
     key = BitVector(textstring = key)
     key = key.permute(key_permutation_1)
     return key
 
 def decrypt(inputTextFile, round_keyList):
     round_keyList = list(reversed(round_keyList))
+    # print(round_keyList)
     FILE = open(inputTextFile, "r")
     bv = BitVector(hexstring=FILE.read())
     FILEOUT = open(sys.argv[4], 'w')
@@ -134,6 +136,7 @@ def decrypt(inputTextFile, round_keyList):
             # print("BitVector in ASCII: "+str(final_string.get_bitvector_in_ascii())) 
             FILEOUT.write(final_string.get_bitvector_in_ascii())
     FILEOUT.close()
+    FILE.close()
 
 
 def DES_text():
@@ -145,7 +148,7 @@ def DES_text():
     
     if encDec == '-d':
         decrypt(inputTextFile, round_keyList)
-    else:
+    elif encDec == '-e':
         bv = BitVector(filename=inputTextFile)
         while (bv.more_to_read):
             bitvec = bv.read_bits_from_file(64)
@@ -174,6 +177,8 @@ def DES_text():
                 # print("BitVector in Hex: "+str(final_string.get_bitvector_in_hex()))
                 FILEOUT.write(final_string.get_bitvector_in_hex())
         FILEOUT.close()
+    else:
+        print("Invalid flags: must be either -e or -d")
         
 if __name__ == "__main__":
     DES_text()

@@ -3,12 +3,11 @@
 # Homework Number: 2
 # Name: Nimal Padmanabhan
 # ECN Login: npadmana   
-# Due Date: 1/19/23
+# Due Date: 1/26/23
 
 
 from BitVector import BitVector
 import sys
-import base64
 
 p_box_perm_table = [15, 6, 19, 20, 28, 11, 27, 16,
                     0, 14, 22, 25, 4, 17, 30, 9,
@@ -137,19 +136,17 @@ def get_encryption_key(filename):
 def DES_image():
     key = get_encryption_key(sys.argv[2])
     round_keyList = generate_round_keys(key)
-    inputTextFile = sys.argv[1]
-    # print(inputTextFile)
-    ppmHeader = ""
-    restOfFile = ""
-    FILE = open(inputTextFile, 'rb')
-    ppmHeader = (FILE.read()[0:14])
-    restOfFile = (FILE.read()[15:])
-    # print(type(ppmHeader))
-    # print(type(restOfFile))
+    imageFile = sys.argv[1]
+    ppmHeader = None
+    FILE = open(imageFile, 'rb')
+    ppmHeader0 = FILE.readline()
+    ppmHeader1 = FILE.readline()
+    ppmHeader2 = FILE.readline()
+    ppmHeader = ppmHeader0 + ppmHeader1 + ppmHeader2
     FILEOUT = open(sys.argv[3], 'wb')
     FILEOUT.write(ppmHeader)
 
-    bv = BitVector(filename=inputTextFile)
+    bv = BitVector(filename=imageFile)
     while (bv.more_to_read):
         bitvec = bv.read_bits_from_file(64)
         if len(bitvec) > 0:
@@ -174,7 +171,6 @@ def DES_image():
                 LE = RE
                 RE = RE_modified
             final_string = RE + LE
-            print(final_string)
             final_string.write_to_file(FILEOUT)
     FILEOUT.close()
     FILE.close()
