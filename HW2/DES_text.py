@@ -141,6 +141,7 @@ def decrypt(inputTextFile, round_keyList):
 
 def DES_text():
     key = get_encryption_key(sys.argv[3])
+
     round_keyList = generate_round_keys(key)
     encDec = sys.argv[1]
     inputTextFile = sys.argv[2]
@@ -165,7 +166,9 @@ def DES_text():
                 permutation (P in Section 3.3.4), the output for RE is
                 RE_modified.
                 '''
+                # print(round_keyList[0])
                 for round_key in round_keyList:
+                    # print(round_keyList[0])
                     newRE = RE.permute(expansion_permutation)
                     out_xor = newRE ^ round_key
                     sbox = substitute(out_xor)
