@@ -2,6 +2,7 @@
 ## BGCD.py
 import sys
 
+
 def binaryMI(num, mod):
     NUM = num; MOD = mod
     x, x_old = 0, 1
@@ -10,7 +11,9 @@ def binaryMI(num, mod):
     while mod:
         # q = num // mod
         q = bitDivide(num, mod)
+        # print(q)
         num, mod = mod, num % mod
+        # print(num, mod)
         # x, x_old = x_old - q * x, x
         # print("x: "+str(x), "x_old: "+str(x_old))
         # print("y: "+str(y), "y_old: " +str(y_old))
@@ -38,19 +41,27 @@ def bitMult(a, b):
         # print(a, b)
     return product
 
+# Source: https://redquark.org/leetcode/0029-divide-two-integers/
 def bitDivide(a, b):
     result = 0
+    # In order to deal with negative numbers, make positive versions
     tempA = abs(a)
     tempB = abs(b)
     if b == 0: # Accounts for divide by zero case
         return None
-    result = 0     
+    result = 0  # Serves as quotient variable   
     while tempA >= tempB:
-        tempA -= tempB
-        result += 1
-        # tempA = tempA << (result - 1)
-    # print(tempA, tempB, result)    
-    # print(power)
+        # Idea: find the number of shifts until the temporary divisor is 
+        # smaller than the temporary dividend
+        n = 0 # Keeps track of number of shifts
+        while tempA >= (tempB << n):
+            n += 1
+        # The number of times we shifted gets added to the result   
+        result = result + (1 << (n - 1)) # result + 2^(n-1)
+        # To account for the multiple of tempB that was added to tempA,
+        # we subtract tempB from tempA and left shift that by n-1 places
+        tempA -= tempB << (n - 1)
+    # print(tempA, tempB, result)
     if (a < 0 and b > 0)  or (b < 0 and a > 0):
         return 0 - result
     else:
@@ -61,6 +72,6 @@ if __name__ == "__main__":
         sys.exit("\nUsage: %s <integer> <integer>\n" % sys.argv[0])
         
     a, b = int(sys.argv[1]), int(sys.argv[2])
-    
-    print(binaryMI(a, b))
+
+    binaryMI(a, b)
 
