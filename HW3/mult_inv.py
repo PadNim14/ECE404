@@ -2,7 +2,6 @@
 ## BGCD.py
 import sys
 
-
 def binaryMI(num, mod):
     NUM = num; MOD = mod
     x, x_old = 0, 1
@@ -30,16 +29,22 @@ def binaryMI(num, mod):
 
 def bitMult(a, b):
     product = 0
+    # Accounts for negative cases
     if a < 0 and b < 0:
         a, b = abs(a), abs(b)
-    while (b != 0):
+    # B is repeatedly divided until it reaches 0 after doing bit shifts
+    while (b > 0):
         if (b & 1): # Checks the last bit to see if odd or even
-            product += a
-            # print(a, b, product)
-        a <<= 1
-        b >>= 1
-        # print(a, b)
-    return product
+            product += a # If it is odd, the current value of a is added to the product variable
+        a <<= 1 # a is left shifted by 1, which is the same as multiplying by 2
+        b >>= 1 # b is right shifted by 1, which is the same as dividing by 2
+    # If either number is negative, make the result of the product negative.
+    # Otherwise, return the positive product
+    if (a < 0 and b > 0)  or (b < 0 and a > 0):
+        return 0-product
+    else:
+        return product
+
 
 # Source: https://redquark.org/leetcode/0029-divide-two-integers/
 def bitDivide(a, b):
@@ -49,7 +54,8 @@ def bitDivide(a, b):
     tempB = abs(b)
     if b == 0: # Accounts for divide by zero case
         return None
-    result = 0  # Serves as quotient variable   
+    result = 0  # Serves as quotient variable
+   
     while tempA >= tempB:
         # Idea: find the number of shifts until the temporary divisor is 
         # smaller than the temporary dividend
@@ -61,7 +67,10 @@ def bitDivide(a, b):
         # To account for the multiple of tempB that was added to tempA,
         # we subtract tempB from tempA and left shift that by n-1 places
         tempA -= tempB << (n - 1)
-    # print(tempA, tempB, result)
+   
+    # In order to account for negative results for division,
+    # we check to see whether the divisor and/or dividend is negative
+    # If it is, then we negate the result by doing 0 - result
     if (a < 0 and b > 0)  or (b < 0 and a > 0):
         return 0 - result
     else:
