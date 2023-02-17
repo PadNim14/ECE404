@@ -37,8 +37,9 @@ def AES_256():
         AES_256_decrypt(encryptedFile, outputFile)
             
             
-def AES_256_encrypt(filename, outputFile):
-    key_bv = get_key_from_file(sys.argv[3])
+def AES_256_encrypt(plaintext, key):
+    # print("plaintext: " + str(plaintext.))
+    key_bv = BitVector( textstring = key )
     key_words = gen_key_schedule_256(key_bv)
     # print(key_words[0].get_bitvector_in_hex())
     num_rounds = 14
@@ -49,16 +50,16 @@ def AES_256_encrypt(filename, outputFile):
     # print(round_keys[0].get_bitvector_in_hex())
     # print(len(round_keys))
     genTables()
-    bv = BitVector(filename=filename) 
-    OUT = open(outputFile, 'w')
+    bv = plaintext
+    # OUT = open(outputFile, 'w')
     # tempOUT = open("temp.txt", 'w')
     # Shift rows
     state_array = [[0 for x in range(4)] for x in range(4)]
     # bitvec = BitVector()
     # sub_bytes_table = gen_subbytes_table()
     
-    while bv.more_to_read:
-        bitvector = bv.read_bits_from_file(128)
+    for i in range(len(bv) // 128):
+        bitvector = bv[i * 128 : (i + 1) * 128]
         if len(bitvector) > 0:
             if len(bitvector) != 128:
                 bitvector.pad_from_right(128 - len(bitvector))
@@ -107,16 +108,27 @@ def AES_256_encrypt(filename, outputFile):
                 two_const = BitVector(bitstring="000000010")
                 three_const = BitVector(bitstring="00000011")
                 state_array = mix_columns(state_array, two_const, three_const)
-               
+                # print(state_array)
+                # print("------------------------------------")
+                # state_array = inv_mix_columns(state_array, e_const, b_const, d_const, nine_const)
+                # print(state_array)
+                # sys.exit()
                 tempbv = BitVector(size=0)
                 
                 one_state_array = add_round_keys(state_array, round_keys, round)
                 # print(one_state_array)
-                # for i in range(4):
-                #     for j in range(4):
-                #         # state_array[j][i] = one_state_array[32*j + 8*i : (32*j + 8*(i+1))].intValue()
-                #         state_array[j][i] = one_state_array[32*i + 8*j : (32*i + 8*(j+1))].intValue()
-               
+                for i in range(4):
+                    for j in range(4):
+                        # state_array[j][i] = one_state_array[32*j + 8*i : (32*j + 8*(i+1))].intValue()
+                        state_array[j][i] = one_state_array[32*i + 8*j : (32*i + 8*(j+1))].intValue()
+                # print(state_array)
+                # print(round_keys[round])
+                # temp = round_keys[::-1]
+                # one_state_array = inv_add_round_keys(state_array, temp, round)
+                # print(temp[round])
+                # print("After round key: " + str(one_state_array.get_bitvector_in_hex()))
+                # sys.exit()
+                # # print(type(one_state_array))
                 for i in range(4):
                     for j in range(4):
                         # state_array[j][i] = one_state_array[32*j + 8*i : (32*j + 8*(i+1))].intValue()
@@ -135,31 +147,28 @@ def AES_256_encrypt(filename, outputFile):
             
             # print("After round key: " + str(state_array.get_bitvector_in_hex()))
             # sys.exit()
-            OUT.write(state_array.get_bitvector_in_hex())
+            # OUT.write(state_array.get_bitvector_in_hex())
         # write_encrypted_file(state_array, OUT)
-    OUT.close() 
+    ciphertext = state_array
+    return ciphertext
+    # OUT.close() 
                   
 
    
-def AES_256_decrypt(filename, outputFile):
-    key_bv = get_key_from_file(sys.argv[3])
+def AES_256_decrypt(ciphertext, key):
+    # print(ciphertext.get_bitvector_in_hex())
+    key_bv = BitVector( textstring = key )
     key_words = gen_key_schedule_256(key_bv)
-    # for word in key_words:
-    #     print(word.get_bitvector_in_hex())
-    # print(key_words)
     # print(key_words[0].get_bitvector_in_hex())
     num_rounds = 14
     round_keys = [None for i in range(num_rounds+1)]
     for i in range(num_rounds+1):
         round_keys[i] = (key_words[i*4] + key_words[i*4+1] + key_words[i*4+2] + key_words[i*4+3])
     round_keys_rev = round_keys[::-1]
-    # for key in round_keys_rev:
-    #     print(key.get_bitvector_in_hex())
-    # print(round_keys)
+  
     genTables()
-    FILE = open(filename, 'r')
-    bv = BitVector(hexstring=FILE.read())
-    OUT = open(outputFile, 'w')
+    
+    bv = ciphertext
    
     state_array = [[0 for x in range(4)] for x in range(4)]
 
@@ -171,7 +180,6 @@ def AES_256_decrypt(filename, outputFile):
                 bitvector.pad_from_right(128 - len(bitvector))
             # Populating state array with bitvector and XORing them with first 4 keywords...
             bitvector ^= round_keys_rev[0]
-            # print(round_keys_rev[0])
             # print("First plaintext block: " + bitvector.get_bitvector_in_hex())           
                  
             for round in range(num_rounds - 1):
@@ -181,13 +189,9 @@ def AES_256_decrypt(filename, outputFile):
                     for j in range(4):
                         state_array[j][i] = bitvector[32*i + 8*j : (32*i + 8*(j+1))].intValue()
                 # Shift rows
-                # print(state_array)
                 state_array = inv_shift_rows(state_array)
-               
-                # print(state_array)
-                # sys.exit()
+    
                 state_array = inv_sub_bytes(state_array)
-                # print(state_array)
                 one_state_array = inv_add_round_keys(state_array, round_keys_rev, round)
                 for i in range(4):
                     for j in range(4):
@@ -201,7 +205,7 @@ def AES_256_decrypt(filename, outputFile):
                         # print(tmp1.get_bitvector_in_ascii())
                         # print(state_array[j][i])
                         tmp1 += BitVector(intVal=state_array[j][i], size=8)
-                # sys.exit()
+                        # sys.exit()
                 bitvector = tmp1
                 # print(tmp1.get_bitvector_in_ascii())
                 # sys.exit()
@@ -211,13 +215,14 @@ def AES_256_decrypt(filename, outputFile):
             state_array = inv_sub_bytes(state_array)
             # Inverse Add round keys
             state_array1 = inv_add_round_keys(state_array, round_keys_rev, 13)
-            print(state_array1.get_bitvector_in_ascii())
+            # print(state_array1.get_bitvector_in_ascii())
             
             
-        OUT.write(state_array1.get_bitvector_in_ascii())
-       
-    OUT.close() 
-    FILE.close()
+        # OUT.write(state_array1.get_bitvector_in_ascii())
+    decrypted = state_array1
+    return decrypted   
+    # OUT.close() 
+    # FILE.close()
         
 
 def sub_bytes(state_array):
@@ -396,6 +401,7 @@ def gen_subbytes_table():
 
 def get_key_from_file(filename):
     key = ""
+    keysize = 256
     with open(filename) as f:
         key = f.read()
     key = key.strip()

@@ -1,5 +1,6 @@
 import x931
 from BitVector import *
+import x931
 
 if __name__ == "__main__":
     v0 = BitVector(textstring="computersecurity") #v0 will be  128 bits
