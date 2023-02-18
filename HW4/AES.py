@@ -386,6 +386,7 @@ def gen_key_schedule_256(key_bv):
 
 def gen_subbytes_table():
     subBytesTable = []
+    
     c = BitVector(bitstring='01100011')
     for i in range(0, 256):
         a = BitVector(intVal = i, size=8).gf_MI(AES_modulus, 8) if i != 0 else BitVector(intVal=0)

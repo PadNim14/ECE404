@@ -26,7 +26,6 @@ def x931(v0, dt, totalNum, key_file):
     with open(key_file) as f:
         key = f.read()
     key = key.strip()
-   
     
     for _ in range(totalNum):
         ciphertext = encrypt(dt, key)
