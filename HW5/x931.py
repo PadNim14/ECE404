@@ -5,7 +5,7 @@
 # Due Date: 2/21/23
 
 from BitVector import *
-from AES import AES_256_encrypt as encrypt, AES_256_decrypt as decrypt, genTables
+from AES import AES_256_encrypt as encrypt, genTables
 
 
 def x931(v0, dt, totalNum, key_file):
@@ -29,18 +29,12 @@ def x931(v0, dt, totalNum, key_file):
     genTables()
     for _ in range(totalNum):
         ciphertext = encrypt(dt, key)
-        decrypt_dt = decrypt(ciphertext, key)
-        ciphertext_1 = encrypt(decrypt_dt, key)
-        temp = v0 ^ ciphertext_1
+        temp = v0 ^ ciphertext
         rand_1 = encrypt(temp, key)
-        rand_1_d = decrypt(rand_1, key)
-        rand_1_e = encrypt(rand_1_d, key)
-        randomNumList.append(rand_1_e)
-        temp2 = rand_1_e ^ ciphertext_1
-        seed_temp_1 = encrypt(temp2, key)
-        seed_temp_2 = decrypt(seed_temp_1, key)
-        seed_temp_3 = encrypt(seed_temp_2, key)
-        v0 = seed_temp_3
+        randomNumList.append(rand_1)
+        temp2 = rand_1 ^ ciphertext
+        seed_temp = encrypt(temp2, key)
+        v0 = seed_temp
     
     # Testing to see if the list has values of any kind    
     # for i in range(totalNum):
