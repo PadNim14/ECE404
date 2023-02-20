@@ -41,11 +41,11 @@ def AES_256_encrypt(plaintext, key):
     # print("plaintext: " + str(plaintext.))
     key_bv = BitVector( textstring = key )
     key_words = gen_key_schedule_256(key_bv)
-    # print(key_words[0].get_bitvector_in_hex())
     num_rounds = 14
     round_keys = [None for i in range(num_rounds+1)]
     for i in range(num_rounds+1):
         round_keys[i] = (key_words[i*4] + key_words[i*4+1] + key_words[i*4+2] + key_words[i*4+3])
+    # print(round_keys)
     bv = plaintext
     
     # Shift rows
@@ -391,7 +391,6 @@ def gee(keyword, round_constant, byte_sub_table):
     return newword, round_constant
 
 
-
 def gen_key_schedule_256(key_bv):
     byte_sub_table = subBytesTable
     # print(subBytesTable)
@@ -422,7 +421,7 @@ def gen_key_schedule_256(key_bv):
     return key_words
 
 def gen_subbytes_table():
-    # subBytesTable = []
+    subBytesTable = []
     c = BitVector(bitstring='01100011')
     for i in range(0, 256):
         a = BitVector(intVal = i, size=8).gf_MI(AES_modulus, 8) if i != 0 else BitVector(intVal=0)

@@ -5,7 +5,7 @@
 # Due Date: 2/21/23
 
 from BitVector import *
-from AES import AES_256_encrypt as encrypt, AES_256_decrypt as decrypt
+from AES import AES_256_encrypt as encrypt, AES_256_decrypt as decrypt, genTables
 
 
 def x931(v0, dt, totalNum, key_file):
@@ -26,7 +26,7 @@ def x931(v0, dt, totalNum, key_file):
     with open(key_file) as f:
         key = f.read()
     key = key.strip()
-    
+    genTables()
     for _ in range(totalNum):
         ciphertext = encrypt(dt, key)
         decrypt_dt = decrypt(ciphertext, key)
