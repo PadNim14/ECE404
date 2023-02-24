@@ -39,7 +39,10 @@ def AES_256():
             
 def AES_256_encrypt(plaintext, key):
     # print("plaintext: " + str(plaintext.))
+    # print(len(plaintext))
     key_bv = BitVector( textstring = key )
+    # print(len(key_bv))
+    # sys.exit()
     key_words = gen_key_schedule_256(key_bv)
     num_rounds = 14
     round_keys = [None for i in range(num_rounds+1)]
@@ -104,7 +107,8 @@ def AES_256_encrypt(plaintext, key):
             
             # Add round keys
             state_array = add_round_keys(state_array, round_keys, 13)
-        
+    # print(len(state_array)) 
+    # sys.exit() 
     return state_array
     # OUT.close() 
                   
