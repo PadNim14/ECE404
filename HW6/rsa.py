@@ -1,4 +1,4 @@
-# Homework Number: 5
+# Homework Number: 6
 # Name: Nimal Padmanabhan
 # ECN Login: npadmana   
 # Due Date: 2/28/23
@@ -8,7 +8,7 @@ import sys
 import random
 e = 65537
 
-
+# Adapted the PrimeGenerator class from Avi Kak's Lectures
 class PrimeGenerator( object ):                                              #(A1)
 
     def __init__( self, **kwargs ):                                          #(A2)
@@ -123,6 +123,7 @@ def rsa_key_gen(p_text, q_text):
     gen = PrimeGenerator(bits=128)
     p = 0
     q = 0
+    
     while p == q:
         # Generate prime p
         p = gen.findPrime()
@@ -130,6 +131,7 @@ def rsa_key_gen(p_text, q_text):
         # getting p - 1 value
         p_1 = p - 1
         e_temp = e
+        # gcd(p-1, e)
         while e_temp:
             p_1 = e_temp
             e_temp = p_1 % e_temp
@@ -139,6 +141,7 @@ def rsa_key_gen(p_text, q_text):
             temp_bv1.set_value(intVal=p)
             p_1 = p - 1
             e_temp = e
+            # gcd(q-1, e)
             while e_temp:
                 p_1 = e_temp
                 e_temp = p_1 % e_temp
@@ -148,6 +151,7 @@ def rsa_key_gen(p_text, q_text):
         temp_bv2.set_value(intVal=p)
         q_1 = q - 1
         e_temp2 = e
+        # gcd
         while e_temp2:
             q_1 = e_temp2
             e_temp2 = q_1 % e_temp2
@@ -157,7 +161,7 @@ def rsa_key_gen(p_text, q_text):
             temp_bv2.set_value(intVal=q)
             q_1 = q - 1
             e_temp2 = e
-            
+            # gcd
             while e_temp2:
                 q_1 = e_temp2
                 e_temp2 = q_1 % e_temp2
@@ -220,7 +224,7 @@ def rsa_decrypt(encrypted_file, p_text, q_text, decrypted_file):
     for i in range(len(cipher_bv) // 256):
         temp_bv = cipher_bv[i * 256 : (i + 1) * 256]
         # Vp = C^d mod p
-        #Vq = C^d mod q
+        # Vq = C^d mod q
         v_p = modular_exp(int(temp_bv), int(d_bitvec), int(p_bitvec))
         v_q = modular_exp(int(temp_bv), int(d_bitvec), int(q_bitvec))
         # print(v_p)
@@ -233,7 +237,7 @@ def rsa_decrypt(encrypted_file, p_text, q_text, decrypted_file):
         OUT.write(decrypted_bv.get_bitvector_in_ascii())
     OUT.close()                    
 
-
+# From lecture 
 def modular_exp(A, B, n):
     exp_res = 1
     while B > 0:
@@ -242,8 +246,6 @@ def modular_exp(A, B, n):
         B >>= 1
         A = (A * A) % n
     return exp_res
-
-
 
 
 if __name__ == "__main__":
