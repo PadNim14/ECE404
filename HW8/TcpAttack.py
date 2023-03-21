@@ -10,7 +10,7 @@ class TcpAttack:
 
     def scanTarget(self, rangeStart, rangeEnd):
         OUTPUT_FILE = open('openports.txt', 'w')
-        # print("------------Scanning Target Ports----------------------")
+        print("------------Scanning Target Ports----------------------")
         verbosity = 0
         open_ports = []
         for testport in range(rangeStart, rangeEnd + 1):

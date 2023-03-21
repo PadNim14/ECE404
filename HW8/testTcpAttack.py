@@ -2,8 +2,8 @@ from TcpAttack import *
 
 if __name__ == "__main__":
     # spoofIP = '127.0.0.2' ; targetIP = '127.0.0.1'
-    spoofIP = '127.0.0.4'
-    targetIP = '127.0.0.1'
+    spoofIP = '127.0.0.2'
+    targetIP = '100.69.79.118'
     rangeStart = 1 
     rangeEnd = 1024
     port = 22
