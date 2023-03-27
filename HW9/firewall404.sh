@@ -1,4 +1,10 @@
 #!/bin/bash
+# Homework Number: 9
+# Name: Nimal Padmanabhan
+# ECN Login: npadmana
+# Due Date: 3/28/23
+
+
 # Flush and delete all previously defined rules and chains
 # In this snippet, it will flush all rules defined in the 
 # filter, mangle, nat, and raw tables
