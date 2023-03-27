@@ -1,5 +1,7 @@
 #!/bin/bash
 # Flush and delete all previously defined rules and chains
+# In this snippet, it will flush all rules defined in the 
+# filter, mangle, nat, and raw tables
 sudo iptables -t filter -F
 sudo iptables -t filter -X
 sudo iptables -t mangle -F
@@ -19,7 +21,7 @@ sudo iptables -t nat -A POSTROUTING -o wlp59s0 -j MASQUERADE
 sudo iptables -A FORWARD -p tcp --tcp-flags SYN,ACK,FIN,RST NONE -m limit --limit 1/s -j ACCEPT
 
 # Protect from SYN-flood attack (limit new conns to 1 per second once local machine has reached 500 requests.)
-sudo iptables -A FORWARD -p tcp --syn -m limit --limit 1/s -j ACCEPT
+sudo iptables -A FORWARD -p tcp --syn -m limit --limit 1/s --limit-burst 500 -j ACCEPT
 
 # Allow full loopback access on your machine
 sudo iptables -A INPUT -i lo -j ACCEPT
