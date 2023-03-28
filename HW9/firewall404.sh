@@ -39,10 +39,10 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 8888 -j DNAT --to-destination 
 
 # Only allows outgoing ssh connections to engineering.purdue.edu
 sudo iptables -A OUTPUT -p tcp --dport 22 -d engineering.purdue.edu -m \
-state --state NEW,ESTABLISHED -j ACCEPT
+state --state ESTABLISHED -j ACCEPT
 
 sudo iptables -A INPUT -p tcp --sport 22 -s engineering.purdue.edu -m \
-state --state ESTABLISHED -j ACCEPT 
+state --state NEW,ESTABLISHED -j ACCEPT 
 
 # Drop any other packets if not caught by above rules
 sudo iptables -A INPUT -j DROP
