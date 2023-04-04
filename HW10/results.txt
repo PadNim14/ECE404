@@ -1,0 +1,3 @@
+For this assignment, we were instructed to perfom a buffer overflow attack using client-server interactions, which were in the form of two C files: client.c and server.c. The string that exposed the buffer overflow vulnerability was the following: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x22\x0e\x40\x00
+
+We will now explain how we arrived at this string using screenshots of the terminal and later fix the vulnerability. First, we need to define a port for the client and server to communicate with. For this example, I used port number 9011. I also used the IP address of the ececomp server, which was 128.46.4.43. I then had two different terminal instances that was running the client with the specified IP address and the server running inside of gdb. 
