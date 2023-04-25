@@ -1,0 +1,47 @@
+SHELL=/bin/sh
+PATH=/usr/local/lib/mh:$PATH
+MAILDIR=$HOME/Mail
+LOGFILE=$HOME/Mail/logfile
+# VERBOSE=1
+VERBOSE=0
+EOL="
+"
+LOG="$EOL$EOL$EOL"
+LOG="New message log:$EOL"
+LOG='perl GET_MESSAGE_INDEX'
+LOG="$EOL"
+
+
+## Recipe_1:
+##
+# Filter out messages with multiple entries in the "From:" header
+:0
+* ^From:.*,
+recipe_1
+
+
+## Recipe_2:
+##
+# These messages can be trapped on the basis of the Subject: line in 
+# the email headers
+:0
+* ^Subject:.*(Safe|career|diploma|professional|Degree|master|university|graduate|Graduate|PhD|MBA|Viagra|Pills|College|free|professional|office|affordable|cheap|expertise|promotion|job|depression|ACCREDITED|accredited|Hostway)
+recipe_2
+
+## Recipe_3:
+##
+# These messages can be trapped on the basis of content (email body)
+:0 B:
+* (Company|GOLD|GEMSTONE|steady|volume|Vegas-style|celebrate|Roulette|Poker|casino)
+recipe_3
+
+## Recipe_4:
+##
+# Can be trapped with a single recipe that has compound rules
+:0
+* ^Content-Type: multipart/alternative
+* !^Content-Type: base64
+recipe_4
+
+
+
